@@ -15,15 +15,42 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-device-access="checking">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const userAgent = navigator.userAgent || navigator.vendor || '';
+        const isIPadOs = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+        const isMobileOrTablet = /(android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet|kindle|silk)/i.test(userAgent);
+        const isTouchOnlyDevice =
+          navigator.maxTouchPoints > 0 &&
+          window.matchMedia('(pointer: coarse)').matches &&
+          window.matchMedia('(hover: none)').matches;
+
+        root.dataset.deviceAccess = isIPadOs || isMobileOrTablet || isTouchOnlyDevice
+          ? 'blocked'
+          : 'allowed';
+      })();
+    </script>
   </head>
   <body>
-    <slot />
+    <div class="device-lock" data-device-lock role="dialog" aria-modal="true" aria-labelledby="device-lock-title">
+      <div class="device-lock__panel">
+        <p class="device-lock__eyebrow">Access Restricted</p>
+        <h1 id="device-lock-title" class="device-lock__title">Desktop Only</h1>
+        <p>
+          This website is available only on desktop.
+        </p>
+      </div>
+    </div>
+    <div class="site-shell">
+      <slot />
+    </div>
   </body>
 </html>

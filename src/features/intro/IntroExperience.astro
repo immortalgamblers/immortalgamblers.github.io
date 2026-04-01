@@ -59,14 +59,16 @@ const introBootstrap = JSON.stringify({
   import { initIntroExperience } from './runtime/initIntroExperience';
   import type { IntroBootstrapConfig } from './runtime/types';
 
-  for (const root of document.querySelectorAll<HTMLElement>('[data-intro-root]')) {
-    const serializedConfig = root.dataset.introBootstrap;
+  if (document.documentElement.dataset.deviceAccess === 'allowed') {
+    for (const root of document.querySelectorAll<HTMLElement>('[data-intro-root]')) {
+      const serializedConfig = root.dataset.introBootstrap;
 
-    if (!serializedConfig) {
-      continue;
+      if (!serializedConfig) {
+        continue;
+      }
+
+      const config = JSON.parse(serializedConfig) as IntroBootstrapConfig;
+      initIntroExperience(root, config);
     }
-
-    const config = JSON.parse(serializedConfig) as IntroBootstrapConfig;
-    initIntroExperience(root, config);
   }
 </script>
