@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  panelClass: string;
+  image: ImageMetadata;
+  alt?: string;
+}
+
+const {
+  panelClass,
+  image,
+  alt = '',
+} = Astro.props;
+---
+
+<section class={`intro__panel intro__panel--scene ${panelClass}`} aria-hidden="true">
+  <Image
+    src={image}
+    alt={alt}
+    class="intro__scene-image"
+    loading="eager"
+  />
+</section>

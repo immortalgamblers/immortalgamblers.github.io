@@ -1,0 +1,21 @@
+.intro__witness-portrait,
+.intro__witness-light {
+  position: absolute;
+  inset: 0;
+}
+
+.intro__witness-portrait {
+  z-index: 0;
+}
+
+.intro__witness-light {
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 28ms steps(1, end);
+  will-change: opacity;
+}
+
+.intro[data-witness-flicker="true"] .intro__witness-light {
+  opacity: 0;
+}

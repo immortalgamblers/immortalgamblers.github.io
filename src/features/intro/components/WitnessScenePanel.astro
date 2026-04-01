@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  lightImage: ImageMetadata;
+  portraitImage: ImageMetadata;
+}
+
+const { lightImage, portraitImage } = Astro.props;
+---
+
+<section class="intro__panel intro__panel--scene intro__panel--temporary" aria-hidden="true">
+  <Image
+    src={portraitImage}
+    alt=""
+    class="intro__scene-image intro__witness-portrait"
+    loading="eager"
+  />
+  <Image
+    src={lightImage}
+    alt=""
+    class="intro__scene-image intro__witness-light"
+    loading="eager"
+  />
+</section>

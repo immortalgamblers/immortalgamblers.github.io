@@ -1,0 +1,42 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  idleImage: ImageMetadata;
+  answeredImage: ImageMetadata;
+  buttonLabel: string;
+}
+
+const {
+  idleImage,
+  answeredImage,
+  buttonLabel,
+} = Astro.props;
+---
+
+<section class="intro__panel intro__panel--phone" aria-hidden="true">
+  <div class="intro__phone-stage">
+    <Image
+      src={idleImage}
+      alt=""
+      class="intro__scene-image intro__phone-image intro__phone-image--idle"
+      loading="eager"
+    />
+    <Image
+      src={answeredImage}
+      alt=""
+      class="intro__scene-image intro__phone-image intro__phone-image--answered"
+      loading="eager"
+    />
+
+    <button
+      class="intro__phone-trigger"
+      type="button"
+      aria-label={buttonLabel}
+      data-phone-trigger
+    >
+      <span class="sr-only">{buttonLabel}</span>
+    </button>
+  </div>
+</section>

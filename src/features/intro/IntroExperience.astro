@@ -1,0 +1,72 @@
+---
+import ClickMePanel from './components/ClickMePanel.astro';
+import ImageScenePanel from './components/ImageScenePanel.astro';
+import PhonePanel from './components/PhonePanel.astro';
+import PhoneOptionsOverlay from './components/PhoneOptionsOverlay.astro';
+import SubtitlesOverlay from './components/SubtitlesOverlay.astro';
+import TypewriterPanel from './components/TypewriterPanel.astro';
+import WitnessScenePanel from './components/WitnessScenePanel.astro';
+import {
+  GABRIEL_DIALOGUE_CUES,
+  GABRIEL_DIALOGUE_START_DELAY_MS,
+} from './config/dialogue';
+import { INTRO_AUDIO, INTRO_IMAGES } from './config/assets';
+import { INTRO_RUNTIME_CONFIG } from './config/runtime';
+
+import './styles/index.css';
+
+const introBootstrap = JSON.stringify({
+  audio: INTRO_AUDIO,
+  runtime: INTRO_RUNTIME_CONFIG,
+  dialogueStartDelayMs: GABRIEL_DIALOGUE_START_DELAY_MS,
+  dialogueCues: GABRIEL_DIALOGUE_CUES,
+});
+---
+
+<div
+  class="intro"
+  data-intro-root
+  data-intro-state="click-me"
+  data-scene-slide="site-one"
+  data-phone-phase="idle"
+  data-phone-options-visible="false"
+  data-blackout-visible="false"
+  data-subtitle-visible="false"
+  data-subtitle-position="bottom"
+  data-subtitle-tone="gabriel"
+  data-witness-flicker="false"
+  data-intro-bootstrap={introBootstrap}
+>
+  <ClickMePanel image={INTRO_IMAGES.clickMe} buttonLabel="Enter intro" />
+  <TypewriterPanel />
+  <ImageScenePanel panelClass="intro__panel--site-one" image={INTRO_IMAGES.siteOne} />
+  <ImageScenePanel panelClass="intro__panel--site-two" image={INTRO_IMAGES.siteTwo} />
+  <WitnessScenePanel
+    lightImage={INTRO_IMAGES.interrogationLights}
+    portraitImage={INTRO_IMAGES.leya}
+  />
+  <PhonePanel
+    idleImage={INTRO_IMAGES.phoneIdle}
+    answeredImage={INTRO_IMAGES.phoneAnswered}
+    buttonLabel="Call Gabriel"
+  />
+  <SubtitlesOverlay />
+  <PhoneOptionsOverlay />
+  <div class="intro__fade-overlay" aria-hidden="true"></div>
+</div>
+
+<script>
+  import { initIntroExperience } from './runtime/initIntroExperience';
+  import type { IntroBootstrapConfig } from './runtime/types';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-intro-root]')) {
+    const serializedConfig = root.dataset.introBootstrap;
+
+    if (!serializedConfig) {
+      continue;
+    }
+
+    const config = JSON.parse(serializedConfig) as IntroBootstrapConfig;
+    initIntroExperience(root, config);
+  }
+</script>

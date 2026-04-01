@@ -1,0 +1,38 @@
+import type { RuntimeConfig } from '../runtime/types';
+
+export const INTRO_RUNTIME_CONFIG: RuntimeConfig = {
+  titleText: 'DURKTOWN 192X',
+  timings: {
+    typeStartDelay: 600,
+    typeSpeed: 220,
+    holdDelay: 2000,
+    sceneTransitionCleanupDelay: 1800,
+    phoneTransitionDuration: 1400,
+    ambienceFadeOutDuration: 1200,
+    phoneRingStartDelay: 260,
+    phoneAnswerSpeechDelay: 320,
+    phoneOptionsRevealDelay: 500,
+    witnessTransitionLeadDelay: 500,
+    witnessBlackoutDuration: 650,
+    witnessBlackHoldDelay: 220,
+    witnessDialogueStartDelay: 900,
+  },
+  audio: {
+    typeSoundPoolSize: 3,
+    typeSoundVolume: 0.22,
+    musicTargetVolume: 0.45,
+    phoneMusicTargetVolume: 0.14,
+    witnessMusicTargetVolume: 0.18,
+    barTargetVolume: 0.12,
+    lampAmbientTargetVolume: 0.24,
+    clearMusicLowpassFrequency: 20000,
+    phoneMusicLowpassFrequency: 720,
+    musicFadeDuration: 2800,
+    barFadeDuration: 3200,
+    lampAmbientFadeDuration: 1200,
+    phoneRingVolume: 0.45,
+    phoneAnswerVolume: 0.72,
+    gabrielDialogueVolume: 0.7,
+    witnessDialogueVolume: 0.72,
+  },
+};

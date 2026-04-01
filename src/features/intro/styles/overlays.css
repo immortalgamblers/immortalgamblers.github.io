@@ -1,0 +1,73 @@
+.intro__subtitles {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1rem, 3vw, 2.25rem);
+  z-index: 5;
+  width: min(92vw, 68rem);
+  padding: 1rem 1.25rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity calc(420ms / var(--intro-debug-speed)) ease;
+}
+
+.intro__fade-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity calc(var(--intro-blackout-duration) / var(--intro-debug-speed)) ease;
+}
+
+.intro[data-blackout-visible="true"] .intro__fade-overlay {
+  opacity: 1;
+}
+
+.intro[data-subtitle-visible="true"] .intro__subtitles {
+  opacity: 1;
+  visibility: visible;
+}
+
+.intro[data-subtitle-position="top"] .intro__subtitles {
+  top: clamp(1rem, 3vw, 2.25rem);
+  bottom: auto;
+}
+
+.intro[data-subtitle-position="top-right"] .intro__subtitles {
+  top: calc(50% - var(--intro-phone-stack-shift));
+  right: var(--intro-phone-overlay-right);
+  bottom: auto;
+  left: auto;
+  width: var(--intro-phone-overlay-width);
+  transform: translateY(-50%);
+  transition: opacity calc(420ms / var(--intro-debug-speed)) ease;
+}
+
+.intro[data-intro-state="phone-transition"] .intro__subtitles {
+  opacity: 0;
+}
+
+.intro__subtitle-speaker {
+  margin: 0 0 0.4rem;
+  color: #8ae5f1;
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro[data-subtitle-tone="leya"] .intro__subtitle-speaker {
+  color: #b54d68;
+}
+
+.intro__subtitle-text {
+  margin: 0;
+  line-height: 1.55;
+  font-size: clamp(1rem, 2.25vw, 1.4rem);
+}

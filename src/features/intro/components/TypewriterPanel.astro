@@ -1,0 +1,14 @@
+---
+interface Props {
+  textDataAttr?: string;
+}
+
+const { textDataAttr = 'data-intro-text' } = Astro.props;
+const textAttributes = { [textDataAttr]: '' };
+---
+
+<section class="intro__panel intro__panel--typewriter">
+  <p class="intro__typewriter">
+    <span class="intro__text" {...textAttributes}></span>
+  </p>
+</section>
