@@ -2,6 +2,7 @@ import type { GabrielDialogueCue } from '../config/dialogue';
 
 export type IntroState =
   | 'click-me'
+  | 'preloading'
   | 'typewriter'
   | 'site-one-transition'
   | 'site-one'
@@ -13,6 +14,7 @@ export type IntroState =
 export type SceneSlide = 'site-one' | 'site-two';
 
 export type PhonePhase = 'idle' | 'ringing' | 'answered';
+export type IntroPreloadPhase = 'idle' | 'running' | 'complete';
 
 export type SubtitlePosition = 'top' | 'bottom' | 'top-right';
 export type SubtitleTone = 'gabriel' | 'leya';
@@ -99,6 +101,7 @@ export interface IntroBootstrapConfig {
 export interface IntroElements {
   root: HTMLElement;
   trigger: HTMLButtonElement;
+  loadingStatus: HTMLElement;
   phoneTrigger: HTMLButtonElement;
   typedText: HTMLElement;
   subtitleBox: HTMLElement;
@@ -156,6 +159,7 @@ export interface IntroAudioSession {
   applyWitnessMix(): void;
   cleanup(): void;
   fadeInSceneMusic(): void;
+  getPreloadAudioElements(): HTMLAudioElement[];
   resetEffectAudio(audio: HTMLAudioElement): void;
   setDebugPlaybackRate(nextSpeed: number): void;
   startWitnessLampAmbience(): void;
@@ -167,6 +171,8 @@ export interface IntroAudioSession {
 
 export interface IntroRuntimeState {
   audioUnlocked: boolean;
+  introStarted: boolean;
+  preloadPhase: IntroPreloadPhase;
   pressedDebugKeys: Set<string>;
 }
 

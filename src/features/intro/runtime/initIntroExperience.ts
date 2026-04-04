@@ -8,10 +8,15 @@ import {
   getIntroElements,
   isIntroBound,
   setIntroBound,
+  setIntroState,
   setPhonePhase,
   setWitnessFlickerActive,
 } from './dom';
 import { createPhoneFlow } from './phoneFlow';
+import {
+  startIntroPreload,
+  type IntroPreloadTask,
+} from './preload';
 import { createSceneFlow } from './sceneFlow';
 import { createSubtitleController } from './subtitles';
 import { clearAllNamedTimers, createTimerRegistry } from './timers';
@@ -41,8 +46,12 @@ export function initIntroExperience(
   const timers = createTimerRegistry();
   const state: IntroRuntimeState = {
     audioUnlocked: document.documentElement.dataset.audioUnlocked === 'true',
+    introStarted: false,
+    preloadPhase: 'idle',
     pressedDebugKeys: new Set<string>(),
   };
+  let isDestroyed = false;
+  let preloadTask: IntroPreloadTask | null = null;
   const subtitles = createSubtitleController({
     clock,
     elements,
@@ -124,12 +133,65 @@ export function initIntroExperience(
     sceneFlow.startPhoneStateTransition();
   };
 
+  const setLoadingStatus = (loadedCount: number, totalCount: number) => {
+    elements.loadingStatus.textContent = `Loading intro ${loadedCount}/${totalCount}`;
+  };
+
+  const clearLoadingStatus = () => {
+    elements.loadingStatus.textContent = '';
+  };
+
   const handleTriggerClick = () => {
+    if (state.introStarted || state.preloadPhase !== 'idle') {
+      return;
+    }
+
     sceneFlow.unlockAudioIfNeeded();
-    sceneFlow.startTypewriter();
+    state.preloadPhase = 'running';
+    setIntroState(root, 'preloading');
+    elements.trigger.disabled = true;
+    preloadTask = startIntroPreload({
+      root,
+      audio,
+      onProgress: ({ loadedCount, totalCount }) => {
+        if (isDestroyed) {
+          return;
+        }
+
+        setLoadingStatus(loadedCount, totalCount);
+      },
+    });
+
+    void preloadTask.done.then((result) => {
+      if (isDestroyed || preloadTask === null || result.cancelled) {
+        return;
+      }
+
+      preloadTask = null;
+      state.preloadPhase = 'complete';
+      state.introStarted = true;
+
+      if (result.failedAssets.length > 0) {
+        console.warn('Intro preload failed for assets:', result.failedAssets);
+      }
+
+      if (result.timedOut) {
+        console.warn(
+          'Intro preload timed out; continuing with unresolved assets:',
+          result.timedOutAssets,
+        );
+      }
+
+      sceneFlow.startTypewriter();
+    });
   };
 
   const handlePageHide = () => {
+    isDestroyed = true;
+    preloadTask?.cancel();
+    preloadTask = null;
+    state.introStarted = false;
+    state.preloadPhase = 'idle';
     resetDebugSpeed();
     clearAllNamedTimers(clock, timers);
     clock.destroy();
@@ -139,6 +201,9 @@ export function initIntroExperience(
     subtitles.clear();
     witnessFlow.resetWitnessState();
     audio.cleanup();
+    clearLoadingStatus();
+    elements.trigger.disabled = false;
+    setIntroState(root, 'click-me');
     setPhonePhase(root, 'idle', elements.phoneTrigger);
     setWitnessFlickerActive(root, false);
     audio.gabrielDialogue.removeEventListener('ended', handleGabrielDialogueEnded);
@@ -161,6 +226,8 @@ export function initIntroExperience(
   phoneFlow.hidePhoneOptions();
   witnessFlow.hideBlackout();
   subtitles.clear();
+  clearLoadingStatus();
+  elements.trigger.disabled = false;
 
   audio.gabrielDialogue.addEventListener('ended', handleGabrielDialogueEnded);
   window.addEventListener('keydown', handleDebugKeyDown);

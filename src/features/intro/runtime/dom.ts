@@ -9,6 +9,7 @@ import type {
 
 const INTRO_STATES: IntroState[] = [
   'click-me',
+  'preloading',
   'typewriter',
   'site-one-transition',
   'site-one',
@@ -22,6 +23,7 @@ const PHONE_PHASES: PhonePhase[] = ['idle', 'ringing', 'answered'];
 
 export function getIntroElements(root: HTMLElement): IntroElements | null {
   const trigger = root.querySelector('[data-intro-trigger]');
+  const loadingStatus = root.querySelector('[data-intro-loading-status]');
   const phoneTrigger = root.querySelector('[data-phone-trigger]');
   const typedText = root.querySelector('[data-intro-text]');
   const subtitleBox = root.querySelector('[data-subtitle-box]');
@@ -32,6 +34,7 @@ export function getIntroElements(root: HTMLElement): IntroElements | null {
 
   if (
     !(trigger instanceof HTMLButtonElement) ||
+    !(loadingStatus instanceof HTMLElement) ||
     !(phoneTrigger instanceof HTMLButtonElement) ||
     !(typedText instanceof HTMLElement) ||
     !(subtitleBox instanceof HTMLElement) ||
@@ -46,6 +49,7 @@ export function getIntroElements(root: HTMLElement): IntroElements | null {
   return {
     root,
     trigger,
+    loadingStatus,
     phoneTrigger,
     typedText,
     subtitleBox,

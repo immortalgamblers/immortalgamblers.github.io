@@ -90,6 +90,7 @@ export function createSceneFlow({
     setPhoneOptionsVisibility(root, false);
     setBlackoutVisibility(root, false);
     resetWitnessState();
+    elements.loadingStatus.textContent = '';
     elements.typedText.textContent = '';
     setIntroState(root, 'typewriter');
 

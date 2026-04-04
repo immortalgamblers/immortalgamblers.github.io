@@ -79,6 +79,18 @@ export function createIntroAudioSession({
     gabrielOnPhone,
     leyaWitnessDialogue,
   ];
+  const preloadAudioElements: HTMLAudioElement[] = [
+    sceneMusic.audio,
+    barAmbience.audio,
+    lampAmbience.audio,
+    pietraPhonePickup,
+    phoneRing,
+    gabrielPhonePickup,
+    gabrielDialogue,
+    gabrielOnPhone,
+    leyaWitnessDialogue,
+    ...typeSoundState.pools.flatMap((pool) => (pool[0] ? [pool[0]] : [])),
+  ];
   let witnessLampActive = false;
 
   for (const pool of typeSoundState.pools) {
@@ -87,6 +99,7 @@ export function createIntroAudioSession({
 
   for (const response of gabrielPhoneResponses) {
     debugAudioElements.push(response.audio);
+    preloadAudioElements.push(response.audio);
   }
 
   const getScaledDuration = (duration: number) => duration / clock.getSpeed();
@@ -190,6 +203,9 @@ export function createIntroAudioSession({
         getScaledDuration(config.runtime.audio.barFadeDuration),
         audioRuntime,
       );
+    },
+    getPreloadAudioElements() {
+      return preloadAudioElements;
     },
     setDebugPlaybackRate(nextSpeed) {
       for (const audio of debugAudioElements) {

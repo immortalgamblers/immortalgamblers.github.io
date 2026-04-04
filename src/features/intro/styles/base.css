@@ -37,7 +37,8 @@
   background: #000;
 }
 
-.intro[data-intro-state="click-me"] .intro__panel--click-me {
+.intro[data-intro-state="click-me"] .intro__panel--click-me,
+.intro[data-intro-state="preloading"] .intro__panel--click-me {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -84,6 +85,12 @@
   pointer-events: auto;
 }
 
+.intro__click-stack {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+
 .intro__button {
   padding: 0;
   border: 0;
@@ -94,7 +101,7 @@
   transition: transform 120ms ease, filter 120ms ease;
 }
 
-.intro__button:hover {
+.intro[data-intro-state="click-me"] .intro__button:hover {
   transform: scale(1.01);
   filter: brightness(1.04);
 }
@@ -105,9 +112,33 @@
   box-shadow: 0 0 0 12px var(--focus-shadow);
 }
 
+.intro__button:disabled {
+  cursor: progress;
+}
+
+.intro[data-intro-state="preloading"] .intro__button {
+  transform: none;
+  filter: none;
+}
+
 .intro__image {
   width: min(72vw, 320px);
   height: auto;
+}
+
+.intro__loading-status {
+  min-height: 1.25rem;
+  margin: 0;
+  color: var(--color-text);
+  font-family: "Special Elite", "Courier New", monospace;
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.intro[data-intro-state="preloading"] .intro__loading-status {
+  opacity: 1;
 }
 
 .intro__typewriter {

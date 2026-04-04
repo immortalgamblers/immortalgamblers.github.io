@@ -11,19 +11,27 @@ const { image, buttonLabel } = Astro.props;
 ---
 
 <section class="intro__panel intro__panel--click-me">
-  <button
-    class="intro__button"
-    type="button"
-    aria-label={buttonLabel}
-    data-intro-trigger
-  >
-    <Image
-      src={image}
-      alt=""
-      class="intro__image"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <span class="sr-only">{buttonLabel}</span>
-  </button>
+  <div class="intro__click-stack">
+    <button
+      class="intro__button"
+      type="button"
+      aria-label={buttonLabel}
+      data-intro-trigger
+    >
+      <Image
+        src={image}
+        alt=""
+        class="intro__image"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <span class="sr-only">{buttonLabel}</span>
+    </button>
+    <p
+      class="intro__loading-status"
+      data-intro-loading-status
+      aria-live="polite"
+      aria-atomic="true"
+    ></p>
+  </div>
 </section>
